@@ -16,6 +16,7 @@ export class ProcessEngineHandler {
   }
 
   public async execute(processDto: ProcessEngineDto): Promise<string> {
+    console.log(`Sending need ${processDto.needId} to engine`);
     const engineResponse: EngineResponse = await this._chatCompletionService.getNeedsCompletion(
       processDto.rawText,
       processDto.localityName
@@ -25,7 +26,7 @@ export class ProcessEngineHandler {
       new Date(processDto.extractionDate),
       engineResponse.category as CATEGORY,
       engineResponse.description,
-      this.calculateScore(processDto, engineResponse.estimated_population),
+      this.calculateScore(processDto),
       {
         name: processDto.source.name,
         link: processDto.source.link,
@@ -42,13 +43,14 @@ export class ProcessEngineHandler {
       processDto.extraDetails
     );
 
+    console.log(`Saving need ${cleanNeed.needId} to repository`);
     await this._cleanNeedRepository.addCleanNeed(cleanNeed);
     return cleanNeed.needId;
   }
 
-  private calculateScore(processDto: ProcessEngineDto, estimatedPopulation: number): number {
+  private calculateScore(processDto: ProcessEngineDto): number {
     switch(processDto.source.name) {
-        case 'twitter': return getTwitterRelevance(processDto.relevanceData as TwitterRelevanceData, estimatedPopulation);
+        case 'twitter': return getTwitterRelevance(processDto.relevanceData as TwitterRelevanceData);
         default: return 0;
     }
   }

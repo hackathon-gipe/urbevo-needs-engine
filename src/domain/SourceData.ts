@@ -5,8 +5,7 @@ export type TwitterRelevanceData = {
     quote_count: number;
 }
 
-export const getTwitterRelevance = (relevanceData: TwitterRelevanceData, estimatedPopulation: number) => {
-    return (relevanceData.like_count*10000/estimatedPopulation) + 
-            (relevanceData.retweet_counts*20000/estimatedPopulation) +
-            (relevanceData.quote_count*100000/estimatedPopulation);
+export const getTwitterRelevance = (relevanceData: TwitterRelevanceData) => {
+    //MAX 3, MIN 0
+    return Math.min(Math.max(Math.floor(Math.log10(relevanceData.like_count+relevanceData.retweet_counts+relevanceData.quote_count+relevanceData.reply_count)-1), 0), 3)
 }
