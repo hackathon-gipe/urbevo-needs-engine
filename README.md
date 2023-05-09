@@ -1,2 +1,2 @@
-# urbevo-needs-engine
-Social needs engine for Urbevo
+# urbevo-twitter-fetcher
+Fetcher of Twitter demands given a locality

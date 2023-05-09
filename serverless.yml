@@ -1,0 +1,26 @@
+service: urbevo-twitter-fetcher
+frameworkVersion: '3'
+
+custom: 
+  layerConfig:
+    packager: 'npm'
+  webpack:
+    webpackConfig: ./webpack.config.js
+    packager: 'npm'
+    packagerOptions:
+      noFrozenLockfile: true
+
+plugins:
+  - serverless-webpack
+
+package:
+  individually: true
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: eu-south-2
+
+functions:
+  needs-engine-lambda:
+    handler: src/eventhandlers/kinesis-consumer-handler.handler
